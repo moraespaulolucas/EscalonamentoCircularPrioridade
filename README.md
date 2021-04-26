@@ -1,1 +1,1 @@
-# EscalonamentoCircularPrioridade
+# Projeto-SO-Escalonamento
