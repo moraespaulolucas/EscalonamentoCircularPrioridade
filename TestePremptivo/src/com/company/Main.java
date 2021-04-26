@@ -1,7 +1,7 @@
 package com.company;
 
-import com.company.modelo.Linha;
-import com.company.modelo.Processador;
+import com.company.modelo.Processo;
+import com.company.modelo.Escalonamento;
 
 import java.util.*;
 
@@ -9,12 +9,14 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Linha linhas[] = new Linha[20];
+        Escalonamento escalonamento = new Escalonamento();
+        Processo processo[] = new Processo[20];
+
+        int quantum;
         int TempoMedioEspera = 0;
         int NumeroSelecinado = 0;
         int CalculoPriorizado;
         int Total = 0;
-        int quantum;
         int Escolha;
         int Inicio = 0;
         int i;
@@ -28,16 +30,19 @@ public class Main {
         int auxTPE;
         float TempoMedioEsperaCalculo;
         int TempoRetorno = 0;
+        
+        escalonamento.escolherAlgoritmo();
 
-
-        System.out.println("Insira o Quantum");
-        Processador.setQuantum(sc.nextInt());
-        if (Processador.getQuantum() <= 0) {
-            do {
-                System.out.println("insira um numero valido");
-                Processador.setQuantum(sc.nextInt());
-            } while (Processador.getQuantum() <= 0);
-        }
+        do {
+            System.out.println("Insira o quantum:");
+            quantum = sc.nextInt();
+            if (quantum <= 0) {
+                System.out.println("------------------------------");
+                System.out.println("Entrada inválida");
+                System.out.println("------------------------------");
+            }
+        }while (quantum <= 0);
+        escalonamento.setQuantum(quantum);
 
         do {
             System.out.println("------------------------------");
@@ -55,17 +60,17 @@ public class Main {
                 Total = Total + 1;
                 Inicio = Inicio + 1;
 
-                linhas[Inicio] = new Linha();
+                processo[Inicio] = new Processo();
                 System.out.println("Inserir Nome do Processo");
-                linhas[Inicio].setNomeDado(sc.nextLine());
+                processo[Inicio].setNomeDado(sc.nextLine());
                 System.out.println("Inserir quantidade de CPU necessaria");
-                linhas[Inicio].setCPU(sc.nextInt());
+                processo[Inicio].setCPU(sc.nextInt());
                 System.out.println("Inserir prioridade");
-                linhas[Inicio].setPrioridade(sc.nextInt());
-                Prioridades[((Inicio) - 1)] = linhas[Inicio].getPrioridade();
-                linhas[Inicio].setFinalizado(0);
-                TPT = TPT + linhas[Inicio].getCPU();
-                linhas[Inicio].setDuracao(linhas[Inicio].getCPU());
+                processo[Inicio].setPrioridade(sc.nextInt());
+                Prioridades[((Inicio) - 1)] = processo[Inicio].getPrioridade();
+                processo[Inicio].setFinalizado(0);
+                TPT = TPT + processo[Inicio].getCPU();
+                processo[Inicio].setDuracao(processo[Inicio].getCPU());
 
             }
 
@@ -77,26 +82,26 @@ public class Main {
                 NumeroSelecinado = Prioridades[i];
 
                 for (j = 1; j <= Total; j++) {
-                    if (NumeroSelecinado == linhas[j].getPrioridade()) {
-                        if (linhas[j].getCPU() > 0) {
+                    if (NumeroSelecinado == processo[j].getPrioridade()) {
+                        if (processo[j].getCPU() > 0) {
                             aux = 0;
-                            if(Processador.getQuantum() > linhas[j].getCPU()){
-                                aux = linhas[j].getCPU() - Processador.getQuantum();
+                            if(Escalonamento.getQuantum() > processo[j].getCPU()){
+                                aux = processo[j].getCPU() - Escalonamento.getQuantum();
                             }
 
-                            CalculoPriorizado = linhas[j].getCPU() - Processador.getQuantum();
-                            linhas[j].setCPU(CalculoPriorizado);
+                            CalculoPriorizado = processo[j].getCPU() - Escalonamento.getQuantum();
+                            processo[j].setCPU(CalculoPriorizado);
 
-                                TempoDecorrido = TempoDecorrido + Processador.getQuantum() + aux;
-                            //System.out.print(linhas[j].getNomeDado());
+                                TempoDecorrido = TempoDecorrido + Escalonamento.getQuantum() + aux;
+                            //System.out.print(processo[j].getNomeDado());
                             //System.out.print(":" + CalculoPriorizado + " ");
                             //System.out.print("TempoDecorrido:" + TempoDecorrido + "\n");
 
                             //Teste para ver se terminou
-                            if(linhas[j].getFinalizado() == 0) {
-                                if (linhas[j].getCPU() <= 0) {
-                                    linhas[j].setTurnaround(TempoDecorrido);
-                                    linhas[j].setFinalizado(1);
+                            if(processo[j].getFinalizado() == 0) {
+                                if (processo[j].getCPU() <= 0) {
+                                    processo[j].setTurnaround(TempoDecorrido);
+                                    processo[j].setFinalizado(1);
                                     TesteTermino = TesteTermino + 1;
                                 }
                             }
@@ -115,21 +120,21 @@ public class Main {
         System.out.println("Tempo de Turnaround de cada processo: ");
         for (j = 1; j <= Total; j++){
 
-            System.out.print(linhas[j].getNomeDado() + " : " + linhas[j].getTurnaround() + ",");
+            System.out.print(processo[j].getNomeDado() + " : " + processo[j].getTurnaround() + ",");
             System.out.print("  ");
 
-            TempoRetorno = TempoRetorno + linhas[j].getTurnaround();
+            TempoRetorno = TempoRetorno + processo[j].getTurnaround();
         }
 
         System.out.print("\n");
 
         System.out.println("Tempo de Espera de cada processo: ");
         for (j = 1; j <= Total; j++){
-            auxTPE = linhas[j].getTurnaround() - linhas[j].getDuracao();
+            auxTPE = processo[j].getTurnaround() - processo[j].getDuracao();
             TempoMedioEspera =  TempoMedioEspera + auxTPE;
-            linhas[j].setTPE(auxTPE);
+            processo[j].setTPE(auxTPE);
 
-            System.out.print(linhas[j].getNomeDado() + " : " + linhas[j].getTPE() + ",");
+            System.out.print(processo[j].getNomeDado() + " : " + processo[j].getTPE() + ",");
             System.out.print("  ");
 
         }
