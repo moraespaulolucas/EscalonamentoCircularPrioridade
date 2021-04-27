@@ -1,28 +1,27 @@
 package com.company.modelo;
 
-public class Processo {
+public class Processo implements Comparable<Processo>{
+    private String nome;
+    private int tempoRestante;
     private int prioridade;
-    private String NomeDado;
-    private int CPU;
-    private int TPE;
-    private  int Turnaround;
-    private  int Finalizado;
-    private int Duracao;
+    private  int turnaround;
+    private int tempoExecutado;
+    private int tempoEspera;
 
-    public String getNomeDado() {
-        return NomeDado;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeDado(String nomeDado) {
-        NomeDado = nomeDado;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public int getCPU() {
-        return CPU;
+    public int getTempoRestante() {
+        return tempoRestante;
     }
 
-    public void setCPU(int CPU) {
-        this.CPU = CPU;
+    public void setTempoRestante(int tempoDeExecucao) {
+        this.tempoRestante = tempoDeExecucao;
     }
 
     public int getPrioridade() {
@@ -33,35 +32,37 @@ public class Processo {
         this.prioridade = prioridade;
     }
 
-    public int getTPE() {
-        return TPE;
-    }
-
-    public void setTPE(int TPE) {
-        this.TPE = TPE;
-    }
-
     public int getTurnaround() {
-        return Turnaround;
+        return turnaround;
     }
 
     public void setTurnaround(int turnaround) {
-        Turnaround = turnaround;
+        this.turnaround = turnaround;
     }
 
-    public int getFinalizado() {
-        return Finalizado;
+    public int getTempoExecutado() {
+        return tempoExecutado;
     }
 
-    public void setFinalizado(int finalizado) {
-        Finalizado = finalizado;
+    public int getTempoEspera() {
+        return tempoEspera;
     }
 
-    public int getDuracao() {
-        return Duracao;
+    public void setTempoEspera(int tempoEspera) {
+        this.tempoEspera = tempoEspera;
     }
 
-    public void setDuracao(int duracao) {
-        Duracao = duracao;
+    public void setTempoExecutado(int duracao) {
+        tempoExecutado = duracao;
+    }
+
+    @Override
+    public int compareTo(Processo outroProcesso) {
+        if (this.prioridade > outroProcesso.getPrioridade()) {
+            return -1;
+        } if (this.prioridade < outroProcesso.getPrioridade()) {
+            return 1;
+        }
+        return 0;
     }
 }
