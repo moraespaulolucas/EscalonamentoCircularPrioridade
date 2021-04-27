@@ -112,7 +112,7 @@ public class Escalonamento {
         }
         processo.setTempoExecutado(processo.getTempoRestante());
 
-        this.processos.add(processo);// adiciona o processo q acabou de ser cadastrado na lista de pocessos
+        this.processos.add(processo);// adiciona o processo q acabou de ser cadastrado na lista de processos
 
         this.tempoProcessamentoTotal += processo.getTempoRestante();
         this.tempoProcessamentoRestante += processo.getTempoRestante();
@@ -128,12 +128,14 @@ public class Escalonamento {
         this.fazerEscalonamento();
         for (i = 0; i < this.processos.size(); i++) {
             Processo processo = (Processo) processos.get(i);
+            System.out.println("------------------------------");
             System.out.println("Nome: "+processo.getNome()+" | "+"Tempo de execução: "+processo.getTempoExecutado());
             if (this.algoritmoEscolhido == Tipo.circularPorPrioridade) {
                 System.out.println("Prioridade: "+processo.getPrioridade());
             }
             System.out.println("Turnaround: "+processo.getTurnaround());
             System.out.println("Tempo de espera: "+processo.getTempoEspera());
+            System.out.println("------------------------------");
         }
         System.out.println("Tempo total de processamento: "+this.tempoProcessamentoTotal);
         System.out.println("Tempo médio de retorno: "+this.tempoMedioRetorno);
